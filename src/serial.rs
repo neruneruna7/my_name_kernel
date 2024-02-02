@@ -32,7 +32,7 @@ macro_rules! serial_print {
 
 /// シリアルインターフェースを通じてホストに出力し、改行する
 #[macro_export]
-macro_rules! serian_println {
+macro_rules! serial_println {
     () => {
         $crate::serial_print!("\n");
     };
