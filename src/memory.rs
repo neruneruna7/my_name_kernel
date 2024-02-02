@@ -44,7 +44,6 @@ fn translate_addr_inner(addr: VirtAddr, physical_memory_offset: VirtAddr) -> Opt
         addr.p1_index(),
     ];
     let mut frame = level_4_table_flame;
-    
 
     // 複数層のページテーブルをたどる
     for &index in &table_indexes {
@@ -58,7 +57,7 @@ fn translate_addr_inner(addr: VirtAddr, physical_memory_offset: VirtAddr) -> Opt
         frame = match entry.frame() {
             Ok(frame) => frame,
             Err(FrameError::FrameNotPresent) => return None,
-            Err(FrameError::HugeFrame) => panic!("huge pages not supported")
+            Err(FrameError::HugeFrame) => panic!("huge pages not supported"),
         };
     }
 
