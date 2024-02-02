@@ -11,6 +11,10 @@ use wos_os_n71::println;
 pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
+    wos_os_n71::init();
+
+    x86_64::instructions::interrupts::int3();
+
     #[cfg(test)]
     test_main();
 
