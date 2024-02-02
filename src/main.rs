@@ -6,21 +6,23 @@
 
 use bootloader::{entry_point, BootInfo};
 use core::panic::PanicInfo;
-use wos_os_n71::println;
+use wos_os_n71::{memory, println};
 use x86_64::structures::paging::Page;
 
 entry_point!(kernel_main);
 
 fn kernel_main(boot_info: &'static BootInfo) -> ! {
     // use wos_os_n71::memory::active_level4_table;
-    use wos_os_n71::memory::translate_addr;
-
-    use x86_64::VirtAddr;
+    // use wos_os_n71::memory::translate_addr;
+    use x86_64::{structures::paging::Translate, VirtAddr};
 
     println!("Hello World{}", "!");
     wos_os_n71::init();
 
     let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
+
+    // mapperを初期化
+    let mapper = unsafe { memory::init(phys_mem_offset) };
 
     let addresses = [
         // 恒等対応しているVGAバッファのページ
@@ -35,7 +37,9 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
 
     for &address in &addresses {
         let virt = VirtAddr::new(address);
-        let phys = unsafe { translate_addr(virt, phys_mem_offset) };
+        // let phys = unsafe { translate_addr(virt, phys_mem_offset) };
+        // ライブラリの実装を使ったもの
+        let phys = mapper.translate_addr(virt);
         println!("{:?} -> {:?}", virt, phys);
     }
 
