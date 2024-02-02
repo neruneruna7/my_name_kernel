@@ -6,7 +6,8 @@ mod vga_buffer;
 use core::panic::PanicInfo;
 
 #[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
+fn panic(info: &PanicInfo) -> ! {
+    println!("{}", info);
     loop {}
 }
 
@@ -16,6 +17,8 @@ pub extern "C" fn _start() -> ! {
     println!(", some numbers: {} {}", 42, 1.337);
 
     println!("Hello World{}", "!");
+
+    panic!("Some panic message");
 
     loop {}
 }
