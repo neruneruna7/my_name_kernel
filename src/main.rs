@@ -4,6 +4,7 @@
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+mod serial;
 mod vga_buffer;
 
 use core::panic::PanicInfo;
@@ -30,6 +31,7 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
 #[cfg(test)]
 pub fn test_runner(tests: &[&dyn Fn()]) {
     println!("Running {} tests", tests.len());
+    serian_println!("Running {} tests", tests.len());
     for test in tests {
         test();
     }
@@ -37,9 +39,19 @@ pub fn test_runner(tests: &[&dyn Fn()]) {
     exit_qemu(QemuExitCode::Success);
 }
 
+#[cfg(not(test))]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
+    loop {}
+}
+
+#[cfg(test)]
+#[panic_handler]
+fn panic(info: &PanicInfo) -> ! {
+    serian_println!("[failed]\n");
+    serian_println!("Error: {}\n", info);
+    exit_qemu(QemuExitCode::Failed);
     loop {}
 }
 
@@ -57,6 +69,6 @@ pub extern "C" fn _start() -> ! {
 fn trivial_assertion() {
     // trivialは些末なという意味みたい
     print!("trivial assertion... ");
-    assert_eq!(1, 1);
+    assert_eq!(0, 1);
     println!("[ok]");
 }
