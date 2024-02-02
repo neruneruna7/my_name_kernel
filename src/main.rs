@@ -12,12 +12,26 @@ pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
     wos_os_n71::init();
+    use x86_64::registers::control::Cr3;
+    let (level_4_page_table, _) = Cr3::read();
+    println!(
+        "Level 4 page table at: {:?}",
+        level_4_page_table.start_address()
+    );
 
-    // fn stack_overflow() {
-    //     stack_overflow();
-    // }
+    // let ptr = 0xdeadbeaf as *mut u8;
+    let ptr = 0x2054da as *mut u8;
 
-    // stack_overflow();
+    // コードページから読み込む
+    unsafe {
+        let x = *ptr;
+    }
+    println!("read worked");
+
+    unsafe {
+        *ptr = 42;
+    }
+    println!("write worked");
 
     #[cfg(test)]
     test_main();
