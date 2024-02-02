@@ -15,6 +15,17 @@ use core::panic::PanicInfo;
 pub fn init() {
     interrupts::init_idt();
     gdt::init();
+    unsafe {
+        interrupts::PICS.lock().initialize();
+    }
+    x86_64::instructions::interrupts::enable();
+}
+
+pub fn hit_loop() -> ! {
+    loop {
+        // 次の割り込みが入るまでCPUを停止したい
+        x86_64::instructions::hlt();
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -66,7 +77,7 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
     serial_println!("[failed]\n");
     serial_println!("Error: {}\n", info);
     exit_qemu(QemuExitCode::Failed);
-    loop {}
+    hit_loop();
 }
 
 /// `cargo test`のときのエントリポイント
@@ -75,7 +86,7 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
 pub extern "C" fn _start() -> ! {
     init();
     test_main();
-    loop {}
+    hit_loop();
 }
 
 #[cfg(test)]

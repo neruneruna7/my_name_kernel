@@ -13,23 +13,25 @@ pub extern "C" fn _start() -> ! {
 
     wos_os_n71::init();
 
-    fn stack_overflow() {
-        stack_overflow();
-    }
+    // fn stack_overflow() {
+    //     stack_overflow();
+    // }
 
-    stack_overflow();
+    // stack_overflow();
 
     #[cfg(test)]
     test_main();
 
-    loop {}
+    println!("It did not crash!");
+
+    wos_os_n71::hit_loop();
 }
 
 #[cfg(not(test))]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    wos_os_n71::hit_loop();
 }
 
 #[cfg(test)]
