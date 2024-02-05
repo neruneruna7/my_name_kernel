@@ -1,3 +1,5 @@
+pub mod colored_letter;
+
 use core::fmt;
 use lazy_static::lazy_static;
 use spin::Mutex;
@@ -58,10 +60,10 @@ pub enum Color {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(transparent)]
 // repr...でColorCode は u8 と同じメモリレイアウトを持つように指定しているみたい
-struct ColorCode(u8);
+pub struct ColorCode(u8);
 
 impl ColorCode {
-    fn new(foreground: Color, background: Color) -> ColorCode {
+    pub fn new(foreground: Color, background: Color) -> ColorCode {
         // はじめの4ビットが背景色、次の4ビットが前景色ってこと？
         ColorCode((background as u8) << 4 | (foreground as u8))
     }

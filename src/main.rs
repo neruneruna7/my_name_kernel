@@ -12,7 +12,9 @@ use core::panic::PanicInfo;
 use wos_os_n71::{
     println, serial_println,
     task::{keyboard, simple_executor::SimpleExecutor, Task},
+    vga_buffer::{colored_letter, ColorCode},
 };
+use x86_64::structures::paging::Page;
 
 use wos_os_n71::task::executor::Executor;
 
@@ -32,26 +34,44 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     let mut mapper = unsafe { memory::init(phys_mem_offset) };
     let mut frame_allocator = unsafe { BootInfoFrameAllocator::init(&boot_info.memory_map) };
     allocator::init_heap(&mut mapper, &mut frame_allocator).expect("heap initialization failed");
-    let heap_value = Box::new(41);
-    println!("heap_value at {:p}", heap_value);
 
-    let mut vec = Vec::new();
-    for i in 0..500 {
-        vec.push(i);
-    }
-    println!("vec at {:p}", vec.as_slice());
+    // let heap_value = Box::new(41);
+    // println!("heap_value at {:p}", heap_value);
 
-    let referense_counted = Rc::new(vec![1, 2, 3]);
-    let cloned_reference = referense_counted.clone();
-    println!(
-        "current reference count is {}",
-        Rc::strong_count(&cloned_reference)
+    // let mut vec = Vec::new();
+    // for i in 0..500 {
+    //     vec.push(i);
+    // }
+    // println!("vec at {:p}", vec.as_slice());
+
+    // let referense_counted = Rc::new(vec![1, 2, 3]);
+    // let cloned_reference = referense_counted.clone();
+    // println!(
+    //     "current reference count is {}",
+    //     Rc::strong_count(&cloned_reference)
+    // );
+    // core::mem::drop(referense_counted);
+    // println!(
+    //     "reference count is {} now",
+    //     Rc::strong_count(&cloned_reference)
+    // );
+
+    // 未使用のページをマップする
+    let page = Page::containing_address(VirtAddr::new(0));
+    memory::create_example_mapping(page, &mut mapper, &mut frame_allocator);
+
+    // 新しいマッピングを使って、文字列`New!`を画面に書き出す
+    let page_ptr: *mut u64 = page.start_address().as_mut_ptr();
+    unsafe { page_ptr.offset(400).write_volatile(0x_f021_f077_f065_f04e) };
+
+    use wos_os_n71::vga_buffer::colored_letter::ColoredString;
+    use wos_os_n71::vga_buffer::Color;
+
+    let colored_string = ColoredString::from(
+        "Hello Color World!",
+        ColorCode::new(Color::Cyan, Color::DarkGray),
     );
-    core::mem::drop(referense_counted);
-    println!(
-        "reference count is {} now",
-        Rc::strong_count(&cloned_reference)
-    );
+    colored_letter::color_print(colored_string);
 
     #[cfg(test)]
     test_main();
