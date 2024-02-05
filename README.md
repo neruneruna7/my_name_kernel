@@ -1,7 +1,9 @@
-https://os.phil-opp.com/ja/
-を行ったもの
+名刺カーネル
 
-コンピュータへの理解を深めたい
+# 実行
+1. QEMUのインストール
+2. 特定のバージョンのRustのインストール
+3. 実行コマンド
 
-ビルドコマンド
-cargo build --target thumbv7em-none-eabihf
+
+[QEMU](https://www.qemu.org/)
