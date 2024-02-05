@@ -218,7 +218,7 @@ pub fn introduction_icon() {
         ("(M@TMfT=~j#BM#US<?", ye_color),
         ("Wk", la_color),
         ("XXXfW", or_color),
-        ("WHqqkbpfVyZyyZZyyyyyyyyy\n", bg_color),
+        ("   i: icon              \n", te_color),
         //
         ("yyyVyWyyyWVffWpppbkzz", bg_color),
         ("=?z??=jp", or_color),
