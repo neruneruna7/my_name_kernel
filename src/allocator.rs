@@ -55,11 +55,11 @@ pub fn init_heap(
 pub struct Dummy;
 
 unsafe impl GlobalAlloc for Dummy {
-    unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
+    unsafe fn alloc(&self, _layout: Layout) -> *mut u8 {
         null_mut()
     }
 
-    unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {
+    unsafe fn dealloc(&self, _ptr: *mut u8, _layout: Layout) {
         println!("dealloc should be never called")
     }
 }

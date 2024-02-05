@@ -1,5 +1,3 @@
-use core::future::IntoFuture;
-
 use bootloader::bootinfo::{MemoryMap, MemoryRegionType};
 use x86_64::{
     structures::paging::{
@@ -68,7 +66,7 @@ impl BootInfoFrameAllocator {
         let addr_ranges = usable_regions.map(|r| r.range.start_addr()..r.range.end_addr());
 
         // フレームの開始アドレスのイテレータへと変換する
-        let frame_addresses = addr_ranges.flat_map(|r| r.step_by((4096)));
+        let frame_addresses = addr_ranges.flat_map(|r| r.step_by(4096));
 
         // 開始アドレスから PhysFrame 型をつくる
         frame_addresses.map(|addr| PhysFrame::containing_address(PhysAddr::new(addr)))

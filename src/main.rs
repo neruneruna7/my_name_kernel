@@ -9,8 +9,7 @@ extern crate alloc;
 use alloc::{boxed::Box, rc::Rc, vec, vec::Vec};
 use bootloader::{entry_point, BootInfo};
 use core::panic::PanicInfo;
-use wos_os_n71::{memory, println};
-use x86_64::structures::paging::Page;
+use wos_os_n71::println;
 
 entry_point!(kernel_main);
 
@@ -19,7 +18,7 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     // use wos_os_n71::memory::translate_addr;
     use wos_os_n71::allocator;
     use wos_os_n71::memory::{self, BootInfoFrameAllocator};
-    use x86_64::{structures::paging::Translate, VirtAddr};
+    use x86_64::VirtAddr;
 
     println!("Hello World{}", "!");
     wos_os_n71::init();

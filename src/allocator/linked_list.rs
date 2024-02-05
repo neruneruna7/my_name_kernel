@@ -5,8 +5,8 @@ use crate::allocator::align_up;
 use alloc::alloc::{GlobalAlloc, Layout};
 use core::ptr;
 
-//// 未使用領域をリストで管理するのが連結リストアロケータ
-//// しばしばフリーリストとも呼ばれるデータ構造
+/// 未使用領域をリストで管理するのが連結リストアロケータ
+/// しばしばフリーリストとも呼ばれるデータ構造
 /// このテクニックを使用するアロケータは，しばしばプールアロケータとも
 
 /// ノード
@@ -73,7 +73,7 @@ impl LinkedListAllocator {
 
         // 連結リストから十分大きな領域を探す
         while let Some(ref mut region) = current.next {
-            if let Ok(alloc_start) = Self::alloc_from_region(&region, size, align) {
+            if let Ok(alloc_start) = Self::alloc_from_region(region, size, align) {
                 // 領域が割り当てに達している -> リストから除く
                 let next = region.next.take();
                 let ret = Some((current.next.take().unwrap(), alloc_start));
