@@ -1,3 +1,4 @@
+use alloc::format;
 use futures_util::StreamExt;
 use pc_keyboard::{layouts, DecodedKey, HandleControl, KeyCode, Keyboard, ScancodeSet1};
 
@@ -29,8 +30,15 @@ pub async fn print_keypresses() {
 
 fn introductions_by_char(char: char) {
     match char {
-        'n' => introduction_name(),
         'i' => introduction_icon(),
+        'n' => introduction_name(),
+        'a' => introduction_age(),
+        'l' => introduction_language(),
+        'u' => introduction_university(),
+        'm' => introduction_major(),
+        'g' => introduction_grade(),
+        'p' => introduction_programing_language(),
+        'q' => introduction_qualification(),
         _ => print!("{}", char),
     }
 }
@@ -43,9 +51,65 @@ fn introductions_by_keycode(keycode: KeyCode) {
 }
 
 fn introduction_name() {
-    let name = "neruneruna7";
+    let name = "name: neruneruna7";
+    let nick = "neru7";
+    let other_name = "peyang gawa ganzisu";
+    let sum_name = format!("\n {}\n {}\n {}", name, nick, other_name);
     let color_code = ColorCode::new(Color::Black, Color::White);
-    let colored_string = ColoredString::from(name, color_code);
+    let colored_string = ColoredString::from(&sum_name, color_code);
+    color_print(colored_string);
+}
+
+fn introduction_age() {
+    let s = "\n age: 20";
+    let color_code = ColorCode::new(Color::Black, Color::Cyan);
+    let colored_string = ColoredString::from(s, color_code);
+    color_print(colored_string);
+}
+
+fn introduction_language() {
+    let s = "\n language: japanese";
+    let color_code = ColorCode::new(Color::Red, Color::LightGray);
+    let colored_string = ColoredString::from(s, color_code);
+    color_print(colored_string);
+}
+
+fn introduction_university() {
+    let s = "\n university: meijo university";
+    let color_code = ColorCode::new(Color::White, Color::Red);
+    let colored_string = ColoredString::from(s, color_code);
+    color_print(colored_string);
+}
+
+fn introduction_major() {
+    let s = "\n major: Infomation Engineering";
+    let color_code = ColorCode::new(Color::Yellow, Color::Blue);
+    let colored_string = ColoredString::from(s, color_code);
+    color_print(colored_string);
+}
+
+fn introduction_grade() {
+    let s = "\n grade: B2";
+    let color_code = ColorCode::new(Color::Green, Color::Pink);
+    let colored_string = ColoredString::from(s, color_code);
+    color_print(colored_string);
+}
+
+fn introduction_programing_language() {
+    let s = "\n programing language: rust, python, ...";
+    let color_code = ColorCode::new(Color::Black, Color::LightCyan);
+    let colored_string = ColoredString::from(s, color_code);
+    color_print(colored_string);
+}
+
+fn introduction_qualification() {
+    let s = r"
+qualification: 
+    AP (Applied Information Technology Engineer Examination)
+    nissyo boki syokyuu
+    other else";
+    let color_code = ColorCode::new(Color::LightGreen, Color::Magenta);
+    let colored_string = ColoredString::from(s, color_code);
     color_print(colored_string);
 }
 
@@ -55,6 +119,7 @@ pub fn introduction_icon() {
     let he_color = ColorCode::new(Color::Cyan, Color::White);
     let la_color = ColorCode::new(Color::DarkGray, Color::Brown);
     let ye_color = ColorCode::new(Color::Black, Color::Yellow);
+    let te_color = ColorCode::new(Color::Yellow, Color::Black);
     let color_str = [
         ("VVyyVyyVyyVyyVfWyyyyyyyyyyZZUUVO111?", bg_color),
         ("+<+11=1zz", or_color),
@@ -158,26 +223,26 @@ pub fn introduction_icon() {
         ("yyyVyWyyyWVffWpppbkzz", bg_color),
         ("=?z??=jp", or_color),
         ("C~", la_color),
-        ("(M$+#?Nx~jmkXyWm::?", ye_color),
+        ("___________________", ye_color),
         ("HW", la_color),
         ("pp", or_color),
-        ("WHqqkkkpfyyZuuZyyyyyyyZZyy\n", bg_color),
+        (" n: name, a: age,         \n", te_color),
         //
         ("yZWWWyyyyyWWWWWWWHWbkszz", bg_color),
         ("l=ldW", or_color),
         ("<~", la_color),
-        ("(7?T77?Y<?YYYYY6::(", ye_color),
+        (" koukoiku no sina  ", ye_color),
         ("Wm", la_color),
         ("q", or_color),
-        ("HH@mkbpffyyZZyyyZyXyyyVyyyy\n", bg_color),
+        (" l: language, u: university\n", te_color),
         //
         ("WWVXXXyyXyyVWWWWfWbkbpWmAw", bg_color),
         ("OtW", or_color),
         ("n~", la_color),
-        ("_+#UMYSg(JMQQQM$::", ye_color),
+        ("__________________", ye_color),
         ("jg", la_color),
         ("@", or_color),
-        ("HH@HHqkWfVyZyZZZZyyVVVVyVffW", bg_color),
+        (" m: major, q: qualification ", te_color),
         //
         ("yyyyXXWyyyyZyyWWWWWkkHkkkqq", bg_color),
         ("HmXh", or_color),
@@ -185,7 +250,7 @@ pub fn introduction_icon() {
         ("gM6+g#<MkMd#d@", ye_color),
         ("+j", la_color),
         ("M", or_color),
-        ("MH@@HHkbfWyyyyyyyyyyyVWfffffpf", bg_color),
+        (" g: grade, p: programing lang ", te_color),
         //
         ("fffWWWWWfVVVffWyWpWWfWHqqHHkkkqqHma", bg_color),
         ("", or_color),
@@ -195,12 +260,6 @@ pub fn introduction_icon() {
         ("", or_color),
         ("WHH@@MMgHqkbWWXyZZZyZyyyVVfffppfff", bg_color),
     ];
-
-    let icon = r#"
-                                    
-    
-    
-    "#;
 
     for i in color_str.iter() {
         let colored_string = ColoredString::from(i.0, i.1);
