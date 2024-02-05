@@ -13,9 +13,9 @@ use x86_64::{
     VirtAddr,
 };
 
-use bump::BumpAllcator;
+// use bump::BumpAllcator;
 use fixed_size_block::FixedSizeBlockAllcator;
-use linked_list::LinkedListAllocator;
+// use linked_list::LinkedListAllocator;
 
 #[global_allocator]
 // static ALLOCATOR: LockedHeap = LockedHeap::empty();
