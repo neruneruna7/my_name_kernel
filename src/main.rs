@@ -64,8 +64,11 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     let page_ptr: *mut u64 = page.start_address().as_mut_ptr();
     unsafe { page_ptr.offset(400).write_volatile(0x_f021_f077_f065_f04e) };
 
+    use wos_os_n71::task::keyboard::introduction::introduction_icon;
     use wos_os_n71::vga_buffer::colored_letter::ColoredString;
     use wos_os_n71::vga_buffer::Color;
+
+    introduction_icon();
 
     let colored_string = ColoredString::from(
         "Hello Color World!",
@@ -79,7 +82,7 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     // let mut executor = SimpleExecutor::new();
     let mut executor = Executor::new();
     executor.spawn(Task::new(example_task()));
-    executor.spawn(Task::new(keyboard::print_keypresses()));
+    executor.spawn(Task::new(keyboard::introduction::print_keypresses()));
     executor.run();
 
     println!("It did not crash!");
