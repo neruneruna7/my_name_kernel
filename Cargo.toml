@@ -29,7 +29,7 @@ harness = false
 
 
 [dependencies]
-bootloader = {version = "0.9.23", features = ["map_physical_memory"]}
+bootloader = {version = "0.9.24", features = ["map_physical_memory"]}
 volatile = "0.2.7"
 
 spin = "0.5.2"

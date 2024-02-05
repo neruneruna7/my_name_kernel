@@ -74,14 +74,14 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
         "Hello Color World!",
         ColorCode::new(Color::Cyan, Color::DarkGray),
     );
-    colored_letter::color_print(colored_string);
+    // colored_letter::color_print(colored_string);
 
     #[cfg(test)]
     test_main();
 
     // let mut executor = SimpleExecutor::new();
     let mut executor = Executor::new();
-    executor.spawn(Task::new(example_task()));
+    // executor.spawn(Task::new(example_task()));
     executor.spawn(Task::new(keyboard::introduction::print_keypresses()));
     executor.run();
 
