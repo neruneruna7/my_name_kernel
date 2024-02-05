@@ -1,3 +1,6 @@
+pub mod bump;
+pub mod linked_list;
+
 use alloc::alloc::{GlobalAlloc, Layout};
 use core::ptr::null_mut;
 
@@ -9,10 +12,14 @@ use x86_64::{
     VirtAddr,
 };
 
+use bump::BumpAllcator;
+use linked_list::LinkedListAllocator;
 use linked_list_allocator::LockedHeap;
 
 #[global_allocator]
-static ALLOCATOR: LockedHeap = LockedHeap::empty();
+// static ALLOCATOR: LockedHeap = LockedHeap::empty();
+// static ALLOCATOR: Locked<BumpAllcator> = Locked::new(BumpAllcator::new());
+static ALLOCATOR: Locked<LinkedListAllocator> = Locked::new(LinkedListAllocator::new());
 
 pub const HEAP_START: usize = 0x_4444_4444_0000;
 pub const HEAP_SIZE: usize = 100 * 1024;
@@ -53,4 +60,27 @@ unsafe impl GlobalAlloc for Dummy {
     unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {
         println!("dealloc should be never called")
     }
+}
+
+pub struct Locked<A> {
+    inner: spin::Mutex<A>,
+}
+
+impl<A> Locked<A> {
+    pub const fn new(inner: A) -> Self {
+        Self {
+            inner: spin::Mutex::new(inner),
+        }
+    }
+
+    pub fn lock(&self) -> spin::MutexGuard<A> {
+        self.inner.lock()
+    }
+}
+
+/// 与えられたアドレス addr を aligne に上丸めする
+///
+/// alignは２の累乗でなければならない
+fn align_up(addr: usize, align: usize) -> usize {
+    (addr + align - 1) & !(align - 1)
 }
