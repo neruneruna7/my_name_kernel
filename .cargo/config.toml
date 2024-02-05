@@ -1,6 +1,6 @@
 [unstable]
-# コアとコンパイラ組み込みのみのライブラリを再コンパイルする
-build-std = ["core", "compiler_builtins"] 
+# コアとallocとコンパイラ組み込みのみのライブラリを再コンパイルする
+build-std = ["core", "compiler_builtins", "alloc"] 
 # memsetなどを有効化する
 build-std-features = ["compiler-builtins-mem"]
 
