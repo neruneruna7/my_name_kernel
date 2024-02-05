@@ -14,6 +14,8 @@ use wos_os_n71::{
     task::{keyboard, simple_executor::SimpleExecutor, Task},
 };
 
+use wos_os_n71::task::executor::Executor;
+
 entry_point!(kernel_main);
 
 fn kernel_main(boot_info: &'static BootInfo) -> ! {
@@ -55,13 +57,17 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
         Rc::strong_count(&cloned_reference)
     );
 
-    let mut executor = SimpleExecutor::new();
-    executor.spawn(Task::new(example_task()));
-    executor.spawn(Task::new(keyboard::print_keypresses()));
-    executor.run();
+    #[cfg(test)]
+    test_main();
 
     #[cfg(test)]
     test_main();
+
+    // let mut executor = SimpleExecutor::new();
+    let mut executor = Executor::new();
+    executor.spawn(Task::new(example_task()));
+    executor.spawn(Task::new(keyboard::print_keypresses()));
+    executor.run();
 
     println!("It did not crash!");
 

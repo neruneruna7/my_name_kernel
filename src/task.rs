@@ -1,3 +1,4 @@
+pub mod executor;
 pub mod keyboard;
 pub mod simple_executor;
 
@@ -17,6 +18,7 @@ impl TaskId {
 }
 
 pub struct Task {
+    id: TaskId,
     // 各async fnは異なる型を持っている
     // それに対応するため dynによる動的ディスパッチを使う
     future: Pin<Box<dyn Future<Output = ()>>>,
@@ -27,6 +29,7 @@ impl Task {
         // 返されたTaskが任意の時間だけ生き続けることができるため，
         // futureもその時間だけ有効である必要がある
         Self {
+            id: TaskId::new(),
             future: Box::pin(future),
         }
     }
