@@ -10,7 +10,7 @@ use alloc::{boxed::Box, rc::Rc, vec, vec::Vec};
 use bootloader::{entry_point, BootInfo};
 use core::panic::PanicInfo;
 use wos_os_n71::{
-    println,
+    println, serial_println,
     task::{keyboard, simple_executor::SimpleExecutor, Task},
 };
 
@@ -27,15 +27,11 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
 
     println!("Hello World{}", "!");
     wos_os_n71::init();
-
     let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
     // mapperを初期化
     let mut mapper = unsafe { memory::init(phys_mem_offset) };
-
     let mut frame_allocator = unsafe { BootInfoFrameAllocator::init(&boot_info.memory_map) };
-
     allocator::init_heap(&mut mapper, &mut frame_allocator).expect("heap initialization failed");
-
     let heap_value = Box::new(41);
     println!("heap_value at {:p}", heap_value);
 
@@ -56,9 +52,6 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
         "reference count is {} now",
         Rc::strong_count(&cloned_reference)
     );
-
-    #[cfg(test)]
-    test_main();
 
     #[cfg(test)]
     test_main();
